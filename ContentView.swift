@@ -4,6 +4,8 @@
 //
 //  Created by Anapiya Nurkeldi on 02.09.2025.
 //
+// @State is just like useState in React (rerenders the thing that we changed when we change state)
+// @Binding is like giving setState and state props to the child component if we have to change or use it there / BUT if we don't wanna change that state value in child we can give it just as state
 
 import SwiftUI
 
@@ -27,7 +29,7 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            BackgroundView(isNight: $isNight)
+            BackgroundView(isNight: isNight)
             VStack {
                 CityTextView(cityName: "Los Angeles, CA")
                 MainTemperatureView(Temperature: 29, ImageName: isNight ? "moon.stars.fill" : "cloud.sun.fill")
@@ -60,7 +62,7 @@ struct WeatherDayView: View {
                 .foregroundColor(.white)
                 .font(.system(size: 16))
             Image(systemName: imageName)
-                .renderingMode(.original)
+                .symbolRenderingMode(.multicolor)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 40, height: 40)
@@ -72,12 +74,10 @@ struct WeatherDayView: View {
 }
 
 struct BackgroundView: View {
-    @Binding var isNight: Bool
+    var isNight: Bool
     var body: some View {
-        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : Color("lightBlue")]),
-                       startPoint: .top,
-                       endPoint: .bottom)
-        .edgesIgnoringSafeArea(.all)
+        LinearGradient(colors: [isNight ? Color.black : Color.blue, isNight ? Color.blue : Color("lightBlue")], startPoint: .top, endPoint: .bottom)
+            .ignoresSafeArea()
     }
 }
 
@@ -97,7 +97,7 @@ struct MainTemperatureView: View {
     var body: some View {
         VStack(spacing: 10){
             Image(systemName: ImageName)
-                .renderingMode(.original)
+                .symbolRenderingMode(.multicolor)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 180, height: 180)
@@ -109,7 +109,7 @@ struct MainTemperatureView: View {
 }
 
 struct WeekWeathers: View {
-    var weeklyWeather: [WeatherData] = []
+    var weeklyWeather: [WeatherData]
     var body: some View {
         HStack(spacing: 20) {
             ForEach(weeklyWeather) {
